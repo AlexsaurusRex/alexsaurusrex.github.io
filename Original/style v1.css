@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto+Mono:wght@400;500&display=swap');
+
+
+/* Reset padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fonts and Color Palette */
+:root {
+  --color-bg: #0a0a0a;
+  --color-text: #e8e8e8;
+  --color-accent: #4dd0b1;
+  --color-muted: #888;
+  --font-main: 'Poppins', sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
+}
+
+/*  Scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/*  Body styles */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-main);
+}
+
+/* Nav Bar */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+  padding: 1.5rem 3rem;
+  background-color: var(--color-bg);
+  z-index: 100;
+}
+
+/* Nav Style */
+nav a {
+  color: var(--color-muted);
+  text-decoration: none;
+  font-size: 1.00rem;
+  letter-spacing: 0.05em;
+}
+
+/* Nav Hover Effect */
+nav a:hover {
+  color: var(--color-accent);
+}
+
+/* Section Styles */
+section {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--color-muted);
+  border-bottom: 1px solid #1a1a1a;
+}
+
+/* Main content padding to avoid nav overlap */
+main {
+  padding-top: 4rem;
+}
+
+/* hero section */
+#hero {
+  position: relative;
+}
+
+.hero-content {
+  text-align: center;
+  z-index: 1;
+}
+
+#hero h1 {
+  font-size: 7rem;
+  font-weight: 600;
+  letter-spacing: 2.2px;
+  color: var(--color-text);
+  text-shadow: rgba(0, 0, 0, 0.3) 1px 3px 11px;
+}
+
+#hero .tagline {
+  margin-top: 0.1rem;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 2.2px;
+  color: var(--color-accent);
+}
+
+/* background canvas */
+#bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  display: block;
+}
