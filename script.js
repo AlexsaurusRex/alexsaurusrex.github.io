@@ -237,6 +237,22 @@ function animate() {
 
 animate();
 
+// FORMATION CAPTURE
+/*
+function captureFormations() {
+  const data = {
+    hero: getVortexPositions(),
+    expertise: getFibonacciSpherePositions(),
+    work: getGridCubePositions(),
+    contact: getTorusPositions(),
+    dog: getRandomPositions()
+  };
+  console.log('const FORMATIONS = ' + JSON.stringify(data, null, 2) + ';');
+}
+
+captureFormations();
+*/
+
 // handle window resize
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
