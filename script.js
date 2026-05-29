@@ -1,6 +1,4 @@
-// sample https://threejs.org/examples/css3d_sprites.html
-
-// scene setup
+// Scene setup
 const scene = new THREE.Scene();
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -11,7 +9,14 @@ document.getElementById('bg-canvas').appendChild(renderer.domElement);
 const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 5000);
 camera.position.z = 1000;
 
-// wireframe material
+// Handle window resize
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Wireframe material
 const material = new THREE.MeshBasicMaterial({
   color: 0x4dd0b1,
   wireframe: true,
@@ -19,7 +24,7 @@ const material = new THREE.MeshBasicMaterial({
   opacity: 0.3
 });
 
-// create spheres
+// Create spheres, seeded to hero formation
 const spheres = [];
 const count = 300;
 
@@ -27,205 +32,96 @@ for (let i = 0; i < count; i++) {
   const geometry = new THREE.SphereGeometry(15, 16, 16);
   const mesh = new THREE.Mesh(geometry, material);
 
-  const x = Math.random() * 4000 - 2000;
-  const y = Math.random() * 4000 - 2000;
-  const z = Math.random() * 2000 - 1000;
-
-  mesh.position.set(x, y, z);
-  mesh.userData.baseX = x;
-  mesh.userData.baseY = y;
-  mesh.userData.baseZ = z;
+  mesh.position.set(
+    FORMATIONS.hero[i].x,
+    FORMATIONS.hero[i].y,
+    FORMATIONS.hero[i].z
+  );
 
   scene.add(mesh);
   spheres.push(mesh);
 }
 
-// formation targets
-function getRandomPositions() {
-  return spheres.map(() => ({
-    x: Math.random() * 4000 - 2000,
-    y: Math.random() * 4000 - 2000,
-    z: Math.random() * 2000 - 1000
-  }));
-}
-
-// Fibonacci sphere distribution
-function getFibonacciSpherePositions(radius = 600) {
-  const positions = [];
-  const goldenAngle = Math.PI * (3 - Math.sqrt(5));
-
-  for (let i = 0; i < count; i++) {
-    const y = 1 - (i / (count - 1)) * 2;
-    const r = Math.sqrt(1 - y * y);
-    const theta = goldenAngle * i;
-
-    positions.push({
-      x: Math.cos(theta) * r * radius,
-      y: y * radius,
-      z: Math.sin(theta) * r * radius
-    });
-  }
-  return positions;
-}
-
-function getGridCubePositions(size = 600, divisions = 6) {
-  const positions = [];
-  const step = size / divisions;
-
-  for (let x = 0; x <= divisions; x++) {
-    for (let y = 0; y <= divisions; y++) {
-      for (let z = 0; z <= divisions; z++) {
-        positions.push({
-          x: (x * step) - size / 2,
-          y: (y * step) - size / 2,
-          z: ((z * step) - size / 2) * 0.2
-        });
-      }
-    }
-  }
-
-  // instead of piling at center, distribute extras randomly within the cube
-  while (positions.length < count) {
-    positions.push({
-      x: (Math.random() * size) - size / 2,
-      y: (Math.random() * size) - size / 2,
-      z: (Math.random() * size * 0.2) - size * 0.1
-    });
-  }
-
-  return positions.slice(0, count);
-}
-
-// Torus knot formation
-function getTorusPositions(radius = 400, tube = 100) {
-  const positions = [];
-  const tempGeometry = new THREE.TorusGeometry(radius, tube, 20, 100);
-  const positionAttribute = tempGeometry.attributes.position;
-
-  for (let i = 0; i < count; i++) {
-    const index = Math.floor((i / count) * positionAttribute.count);
-    positions.push({
-      x: positionAttribute.getX(index),
-      y: positionAttribute.getY(index),
-      z: positionAttribute.getZ(index)
-    });
-  }
-
-  tempGeometry.dispose();
-  return positions;
-}
-
-// Burst formation
-function getBurstPositions(radius = 600) {
-  const positions = [];
-
-  for (let i = 0; i < count; i++) {
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
-    const r = Math.pow(Math.random(), 0.5) * radius;
-
-    positions.push({
-      x: r * Math.sin(phi) * Math.cos(theta),
-      y: r * Math.sin(phi) * Math.sin(theta),
-      z: r * Math.cos(phi)
-    });
-  }
-
-  return positions;
-}
-
-//Vortex formation
-function getVortexPositions(radius = 400, height = 600) {
-  const positions = [];
-
-  for (let i = 0; i < count; i++) {
-    const t = i / count;
-    const angle = t * Math.PI * 2 * 6;
-    const r = radius * (1 - t);
-
-    positions.push({
-      x: Math.cos(angle) * r,
-      y: (t * height) - height / 2,
-      z: Math.sin(angle) * r
-    });
-  }
-
-  return positions;
-}
-
-// transition to a formation
-function transitionTo(positions) {
-  spheres.forEach((sphere, i) => {
-    gsap.to(sphere.userData, {
-      baseX: positions[i].x,
-      baseY: positions[i].y,
-      baseZ: positions[i].z,
-      duration: 1,
-      ease: 'power2.inOut'
-    });
-  });
-}
-
-// Transition camera perspective
-function transitionCamera(x, y, z) {
-  gsap.to(camera.position, {
-    x: x,
-    y: y,
-    z: z,
-    duration: 1,
-    ease: 'power2.inOut'
-  });
-}
-
-// Section animation formations
-const formations = {
-  hero: getVortexPositions(),
-  expertise: getFibonacciSpherePositions(),
-  work: getGridCubePositions(),
-  contact: getTorusPositions(), 
-  dog: getRandomPositions()
-};
+// Section order — must match DOM order
+const SECTION_KEYS = ['hero', 'expertise', 'work', 'contact', 'dog'];
 
 // Camera positions for each section
-const cameraPositions = {
-  hero:      { x: 0,   y: 500,   z: 2000 },
-  expertise: { x: 0,   y: 0,   z: 1200 },
-  work:      { x: 0,   y: -500,   z: 2000 },
-  contact:   { x: 0,   y: 0,   z: 2000 },
-  dog:       { x: 0,   y: 0,   z: 1000 }
-};
+const CAMERA_POSITIONS = [
+  { x: 0, y: 300,  z: 2200 },  // hero
+  { x: 0, y: -1000, z: 5000 },  // expertise
+  { x: 0, y: -600, z: 3000 },  // work
+  { x: 0, y: 0,    z: 750 },  // contact
+  { x: 0, y: 0,    z: 3000 }   // dog
+];
 
-// intersection observer
-const sections = document.querySelectorAll('section');
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const id = entry.target.id;
-      if (formations[id]) {
-        transitionTo(formations[id]);
-        const cam = cameraPositions[id];
-        transitionCamera(cam.x, cam.y, cam.z);
-      }
-    }
-  });
-}, { threshold: 0.2 });
 
-sections.forEach(section => observer.observe(section));
+// Linear interpolation
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
 
-// Animation
+// Get scroll progress as section index + fraction
+function getScrollState() {
+  const nav = document.querySelector('nav');
+  const offset = nav ? nav.offsetHeight : 0;
+  const scrollY = Math.max(0, window.scrollY - offset);
+  const sectionHeight = window.innerHeight;
+  const totalSections = SECTION_KEYS.length;
+
+  const raw = scrollY / sectionHeight;
+  const index = Math.min(Math.floor(raw), totalSections - 2);
+  const t = Math.min(Math.max(raw - index, 0), 1);
+
+  return { index, t };
+}
+
 const driftOffsets = spheres.map(() => ({ x: 0, y: 0 }));
 
 let time = 0;
+
+function getFormationPos(sectionKey, formation, i) {
+  const p = formation[i];
+  if (sectionKey === 'work') {
+    return { x: p.x, y: p.z, z: -p.y };
+  }
+  return p;
+}
+
 function animate() {
   requestAnimationFrame(animate);
   time += 0.001;
 
+  const { index, t } = getScrollState();
+
+  const fromFormation = FORMATIONS[SECTION_KEYS[index]];
+  const toFormation = FORMATIONS[SECTION_KEYS[index + 1]];
+  const fromCam = CAMERA_POSITIONS[index];
+  const toCam = CAMERA_POSITIONS[index + 1];
+
+  // Interpolate camera
+  camera.position.x = lerp(fromCam.x, toCam.x, t);
+  camera.position.y = lerp(fromCam.y, toCam.y, t);
+  camera.position.z = lerp(fromCam.z, toCam.z, t);
+
+  const flipSections = ['hero'];
+
   spheres.forEach((sphere, i) => {
+    const fromPos = getFormationPos(SECTION_KEYS[index],     fromFormation, i);
+    const toPos   = getFormationPos(SECTION_KEYS[index + 1], toFormation,   i);
+
+    const fromY = flipSections.includes(SECTION_KEYS[index])     ? -fromPos.y : fromPos.y;
+    const toY   = flipSections.includes(SECTION_KEYS[index + 1]) ? -toPos.y   : toPos.y;
+
+    const baseX = lerp(fromPos.x, toPos.x, t);
+    const baseY = lerp(fromY, toY, t);
+    const baseZ = lerp(fromPos.z, toPos.z, t);
+
     driftOffsets[i].x = Math.cos(time + i * 0.15) * 20;
     driftOffsets[i].y = Math.sin(time + i * 0.1) * 20;
 
-    sphere.position.x = sphere.userData.baseX + driftOffsets[i].x;
-    sphere.position.y = sphere.userData.baseY + driftOffsets[i].y;
+    sphere.position.x = baseX + driftOffsets[i].x;
+    sphere.position.y = baseY + driftOffsets[i].y;
+    sphere.position.z = baseZ;
 
     sphere.rotation.x += 0.002;
     sphere.rotation.y += 0.003;
@@ -235,27 +131,85 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-animate();
-
-// FORMATION CAPTURE
-/*
-function captureFormations() {
-  const data = {
-    hero: getVortexPositions(),
-    expertise: getFibonacciSpherePositions(),
-    work: getGridCubePositions(),
-    contact: getTorusPositions(),
-    dog: getRandomPositions()
-  };
-  console.log('const FORMATIONS = ' + JSON.stringify(data, null, 2) + ';');
+//Vortex "drain" position
+function getFormationPos(sectionKey, formation, i) {
+  const p = formation[i];
+  if (sectionKey === 'work') {
+    // Rotate 45° around X axis
+    const cos45 = -Math.SQRT1_2; // 0.707...
+    const sin45 = -Math.SQRT1_2;
+    return {
+      x: p.x,
+      y: p.y * cos45 - p.z * sin45,
+      z: p.y * sin45 + p.z * cos45
+    };
+  }
+  return p;
 }
 
-captureFormations();
-*/
+animate();
 
-// handle window resize
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+// Smooth nav scrolling
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetId = link.getAttribute('href').slice(1);
+    const targetSection = document.getElementById(targetId);
+    if (!targetSection) return;
+
+    const targetY = targetSection.offsetTop;
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    const duration = 500; // ms — adjust this to taste
+    let startTime = null;
+
+    function scrollStep(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Ease in-out
+      const ease = progress < 0.5
+        ? 2 * progress * progress
+        : -1 + (4 - 2 * progress) * progress;
+
+      window.scrollTo(0, startY + distance * ease);
+
+      if (progress < 1) requestAnimationFrame(scrollStep);
+    }
+
+// Smooth button scrolling
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetId = btn.getAttribute('href').slice(1);
+    const targetSection = document.getElementById(targetId);
+    if (!targetSection) return;
+
+    const targetY = targetSection.offsetTop;
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    const duration = 300; // ms — adjust this to taste
+    let startTime = null;
+
+    function scrollStep(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      const ease = progress < 0.5
+        ? 2 * progress * progress
+        : -1 + (4 - 2 * progress) * progress;
+
+      window.scrollTo(0, startY + distance * ease);
+
+      if (progress < 1) requestAnimationFrame(scrollStep);
+    }
+
+    requestAnimationFrame(scrollStep);
+  });
+});
+
+    requestAnimationFrame(scrollStep);
+  });
 });

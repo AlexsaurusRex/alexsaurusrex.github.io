@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Alex Main | Imagine. Invent. Build.</title>
+    <title>Alex Main | Imagine. Build. Repeat.</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -13,7 +13,7 @@
 
     <nav>
       <a href="#hero">// home</a>
-      <a href="#expertise">// expertise</a>
+      <a href="#expertise">// values</a>
       <a href="#work">// work</a>
       <a href="#contact">// contact</a>
       <a href="#dog">// dog</a>
@@ -23,20 +23,38 @@
       <section id="hero">
         <div class="hero-content">
           <h1>Alex Main</h1>
-          <p class="tagline">Imagine. Invent. Build.</p>
+          <p class="tagline">Imagine. Build. Repeat.</p>
+          <a href="#expertise" class="nav-btn">start here</a>
         </div>
       </section>
-      <section id="expertise">Expertise</section>
-      <section id="work">Work</section>
-      <section id="contact">Contact</section>
-      <section id="dog">Dog</section>
+
+      <section id="expertise">
+        <span>Values</span>
+        <a href="#work" class="nav-btn">continue</a>
+      </section>
+
+      <section id="work">
+        <span>Work</span>
+        <a href="#contact" class="nav-btn">continue</a>
+      </section>
+
+      <section id="contact">
+        <span>Contact</span>
+        <a href="#dog" class="nav-btn">continue</a>
+      </section>
+
+      <section id="dog">
+        <span>Dog</span>
+        <a href="#hero" class="nav-btn">Begin Again</a>
+      </section>
     </main>
 
-  <!-- Three.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="formations.js"></script>
+<script src="formationsv2.js"></script>
 <script src="script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+<!-- <script src="formation-generator.js"></script> -->
 
   </body>
 </html>
