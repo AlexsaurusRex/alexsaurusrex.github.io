@@ -47,10 +47,10 @@ const SECTION_KEYS = ['hero', 'expertise', 'work', 'contact', 'dog'];
 
 // Camera positions for each section
 const CAMERA_POSITIONS = [
-  { x: 0, y: 225,  z: 2200 },  // hero
-  { x: 0, y: -1000, z: 5000 },  // expertise
-  { x: 0, y: -600, z: 3000 },  // work
-  { x: 0, y: 0,    z: 750 },  // contact
+  { x: 0, y: 125,  z: 2200 },  // hero
+  { x: 0, y: -1250, z: 5000 },  // values/expertise
+  { x: 0, y: -625, z: 3000 },  // work
+  { x: 0, y: 0,    z: 1100 },  // contact
   { x: 0, y: 0,    z: 3000 }   // dog
 ];
 
@@ -178,7 +178,7 @@ document.querySelectorAll('nav a').forEach(link => {
       if (progress < 1) requestAnimationFrame(scrollStep);
     }
 
-// Smooth button scrolling
+// Nav button handling/scrolling
 document.querySelectorAll('.nav-btn').forEach(btn => {
   btn.addEventListener('click', (e) => {
     e.preventDefault();
@@ -225,6 +225,13 @@ navToggle.addEventListener('click', () => {
 // Close menu when a link is tapped
 navLinks.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+  });
+});
+
+// Close menu when a nav-btn is tapped
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
     navLinks.classList.remove('open');
   });
 });

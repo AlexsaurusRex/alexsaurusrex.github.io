@@ -47,8 +47,6 @@ nav, #nav-desktop {
   z-index: 100;
 }
 
-
-
 /* Nav Style */
 nav a {
   color: var(--color-muted);
@@ -145,19 +143,24 @@ section {
 
 
 /* MOBILE STYLES */
+
+
 @media (max-width: 767px) {
+  #hero {
+    padding-bottom: 40vh;
+  }
   #hero h1 {
     font-size: 16vw;
+    transform: translateY(-4rem);
   }
-
   #hero .tagline {
     font-size: 4.5vw;
+    transform: translateY(-4rem);
+  }
+  .nav-btn {
+    bottom: 7rem;
   }
 }
-
-  .nav-btn {
-    bottom: 5rem;
-  }
 
 #nav-mobile {
   display: none;
