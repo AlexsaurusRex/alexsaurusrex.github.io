@@ -1,4 +1,4 @@
-// Scene setup
+// Mobile version
 const scene = new THREE.Scene();
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -47,7 +47,7 @@ const SECTION_KEYS = ['hero', 'expertise', 'work', 'contact', 'dog'];
 
 // Camera positions for each section
 const CAMERA_POSITIONS = [
-  { x: 0, y: 300,  z: 2200 },  // hero
+  { x: 0, y: 225,  z: 2200 },  // hero
   { x: 0, y: -1000, z: 5000 },  // expertise
   { x: 0, y: -600, z: 3000 },  // work
   { x: 0, y: 0,    z: 750 },  // contact
@@ -69,6 +69,8 @@ function getScrollState() {
   const raw = scrollY / sectionHeight;
   const index = Math.min(Math.floor(raw), totalSections - 2);
   const t = Math.min(Math.max(raw - index, 0), 1);
+
+  return { index, t };
 
   return { index, t };
 }
@@ -209,5 +211,20 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 });
 
     requestAnimationFrame(scrollStep);
+  });
+});
+
+// Mobile nav toggle
+const navToggle = document.getElementById('nav-toggle');
+const navLinks = document.getElementById('nav-links');
+
+navToggle.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+});
+
+// Close menu when a link is tapped
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('open');
   });
 });

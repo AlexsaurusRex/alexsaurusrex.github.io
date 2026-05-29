@@ -36,7 +36,7 @@ body {
 }
 
 /* Nav Bar */
-nav {
+nav, #nav-desktop {
   position: fixed;
   top: 0;
   width: 100%;
@@ -46,6 +46,8 @@ nav {
   background-color: var(--color-bg);
   z-index: 100;
 }
+
+
 
 /* Nav Style */
 nav a {
@@ -139,4 +141,64 @@ section {
   overflow: hidden;
   pointer-events: none;
   display: block;
+}
+
+
+/* MOBILE STYLES */
+@media (max-width: 767px) {
+  #hero h1 {
+    font-size: 16vw;
+  }
+
+  #hero .tagline {
+    font-size: 4.5vw;
+  }
+}
+
+  .nav-btn {
+    bottom: 5rem;
+  }
+
+#nav-mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  #nav-desktop {
+    display: none !important;
+  }
+
+  #nav-mobile {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background-color: var(--color-bg);
+    z-index: 100;
+  }
+
+  #nav-toggle {
+    background: none;
+    border: none;
+    color: var(--color-muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  #nav-links {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  #nav-links.open {
+    max-height: 200px;
+  }
 }

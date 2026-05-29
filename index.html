@@ -11,12 +11,25 @@
     <!-- 3D background layer -->
     <div id="bg-canvas"></div>
 
-    <nav>
+    <!-- Desktop Navigation -->
+    <nav id="nav-desktop">
       <a href="#hero">// home</a>
       <a href="#expertise">// values</a>
       <a href="#work">// work</a>
       <a href="#contact">// contact</a>
       <a href="#dog">// dog</a>
+    </nav>
+
+    <!-- mobile nav -->
+    <nav id="nav-mobile">
+      <button id="nav-toggle">☰</button>
+      <div id="nav-links">
+        <a href="#hero">// home</a>
+        <a href="#expertise">// values</a>
+        <a href="#work">// work</a>
+        <a href="#contact">// contact</a>
+        <a href="#dog">// dog</a>
+      </div>
     </nav>
 
     <main>
@@ -52,7 +65,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="formationsv2.js"></script>
-<script src="script.js"></script>
+<script>
+  const isMobile = window.innerWidth < 768;
+  const scriptSrc = isMobile ? 'mobile.js' : 'script.js';
+  document.write('<script src="' + scriptSrc + '"><\/script>');
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
 <!-- <script src="formation-generator.js"></script> -->
 
